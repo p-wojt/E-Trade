@@ -1,18 +1,9 @@
 {% extends "base.html" %}
-
 {% block content %}
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for msg in messages %}
-            <p>{{msg}}</p>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
-
   <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand"><b>E-Trade</b></a>
+            <a class="navbar-brand""><b>E-Trade</b></a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -24,6 +15,14 @@
 
       </div>
   </nav>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
     <form class="col-md-12" method="POST" action="/login">
         <div class="form-group">

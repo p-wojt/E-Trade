@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
-from flask_login import LoginManager, login_user, current_user, logout_user
+from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from model import db
 from utils import any_empty, correct_email, more_than
 from query import create_user, is_user_exists, get_user_by_id
 from werkzeug.security import generate_password_hash, check_password_hash
+import json
+import requests
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -80,13 +82,14 @@ def login():
         if check_password_hash(user.password, password):
             login_user(user)
             flash('You have been logged in')
-            return redirect(url_for('user_profile'))
+            return redirect(url_for('profile'))
         else:
             flash('Password is not correct!')
             return render_template('login.html')
 
 
-@app.route('/logout')
+@app.route('/logout/')
+@login_required
 def logout():
     if current_user.is_authenticated:
         logout_user()
@@ -97,9 +100,26 @@ def logout():
 
 
 @app.route('/profile', methods=['POST', 'GET'])
-def user_profile():
+@login_required
+def profile():
     if request.method == 'GET':
-        return render_template('profile.html')  # msg = User
+        return render_template('profile.html', user=current_user)
+
+
+@app.route('/trade', methods=['POST', 'GET'])
+@login_required
+def trade():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        return render_template('trade.html', crypto=response.json())
 
 
 if __name__ == '__main__':

@@ -1,13 +1,6 @@
 {% extends "base.html" %}
 
 {% block content %}
-{% with messages = get_flashed_messages() %}
-    {% if messages %}
-        {% for msg in messages %}
-            <p>{{msg}}</p>
-        {% endfor %}
-    {% endif %}
-{% endwith %}
 
   <nav class="navbar navbar-default">
       <div class="container">
@@ -24,6 +17,14 @@
 
       </div>
     </nav>
+
+{% with messages = get_flashed_messages() %}
+    {% if messages %}
+        {% for msg in messages %}
+            <p>{{msg}}</p>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
     <form class="col-md-12" method="POST" action="/register">
         <div class="form-group">
