@@ -31,7 +31,7 @@ class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_accounts.id'), nullable=False)
     name = db.Column(db.String(100), nullable=False)
-    amount = db.Column(db.String(100), nullable=False)
+    amount = db.Column(db.String(100), default=0.0, nullable=False)
 
     def __init__(self, user_id, name, amount):
         self.user_id = user_id
@@ -45,15 +45,15 @@ class UserTransaction(db.Model):
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True, nullable=False, unique=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user_accounts.id'), nullable=False)
-    item_id = db.Column(db.Integer, db.ForeignKey('items.id'), nullable=False)
+    item_name = db.Column(db.String(50), nullable=False)
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.String(100), nullable=False)
     value = db.Column(db.String(100), nullable=False)
     action = db.Column(db.String(6), nullable=False) #bought/sold
 
-    def __init__(self, user_id, item_id, amount, value, action):
+    def __init__(self, user_id, item_name, amount, value, action):
         self.user_id = user_id
-        self.item_id = item_id
+        self.item_name = item_name
         self.date = date.today()
         self.amount = amount
         self.value = value

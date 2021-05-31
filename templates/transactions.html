@@ -21,27 +21,36 @@
       </div>
   </nav>
 
-{% with messages = get_flashed_messages() %}
+<div class="container">
+ {% with messages = get_flashed_messages() %}
     {% if messages %}
         {% for msg in messages %}
             <p>{{msg}}</p>
         {% endfor %}
     {% endif %}
 {% endwith %}
+</div>
+
 
     <div class="container">
-        <form class="col-md-12" method="POST" action="/trade">
-            {% for c in crypto %}
-            <div class="text-left">
-                <p>{{c}}: ${{crypto[c]['usd']}}</p>
-                <label>
-                    <input type="text" class="form-control form-control-lg" placeholder={{c}} name={{c}}>
-                </label>
-                <button type="submit" name="buy_{{c}}" value="buy_{{c}}">Buy</button>
-                <button type="submit" name="sell_{{c}}" value="sell_{{c}}">Sell</button>
-            </div>
+        <table style="width: 100%">
+            <tr>
+                <th>Item Name</th>
+                <th>Date</th>
+                <th>Amount</th>
+                <th>Value</th>
+                <th>Action</th>
+            </tr>
+            {% for t in all_transactions %}
+            <tr>
+                <td>{{ t.item_name }}</td>
+                <td>{{ t.date }}</td>
+                <td>${{ t.amount }}</td>
+                <td>${{ t.value }}</td>
+                <td>${{ t.action }}</td>
+            </tr>
             {% endfor %}
-        </form>
+        </table>
     </div>
 
 

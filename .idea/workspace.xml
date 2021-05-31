@@ -2,13 +2,26 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f38fdf41-8284-460d-a661-289170e01a64" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/templates/trade.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/buy_bitcoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/buy_dogecoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/buy_ethereum.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/buy_litecoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/items.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/sell_bitcoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/sell_dogecoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/sell_ethereum.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/sell_litecoin.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/transactions.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f4f09cb-1b60-4710-a162-98e0d3989f03.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f4f09cb-1b60-4710-a162-98e0d3989f03.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/query.py" beforeDir="false" afterPath="$PROJECT_DIR$/query.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/trade.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/trade.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils.py" beforeDir="false" afterPath="$PROJECT_DIR$/utils.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -117,7 +130,12 @@
       <workItem from="1622298497027" duration="241000" />
       <workItem from="1622299483615" duration="593000" />
       <workItem from="1622303017745" duration="159000" />
-      <workItem from="1622310153315" duration="5973000" />
+      <workItem from="1622310153315" duration="6303000" />
+      <workItem from="1622365412223" duration="829000" />
+      <workItem from="1622391429603" duration="1533000" />
+      <workItem from="1622401079770" duration="1034000" />
+      <workItem from="1622440237569" duration="6891000" />
+      <workItem from="1622461274043" duration="14463000" />
     </task>
     <task id="LOCAL-00001" summary="Log in/out system, database model, some pages">
       <created>1622283504568</created>
@@ -138,6 +156,6 @@
   </component>
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/e_trade$utils.coverage" NAME="utils Coverage Results" MODIFIED="1622295538572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/e_trade$server.coverage" NAME="server Coverage Results" MODIFIED="1622314339958" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/e_trade$server.coverage" NAME="server Coverage Results" MODIFIED="1622477016264" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>

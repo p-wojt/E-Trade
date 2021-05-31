@@ -1,5 +1,4 @@
 {% extends "base.html" %}
-
 {% block content %}
   <nav class="navbar navbar-default">
       <div class="container">
@@ -9,7 +8,6 @@
 
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-              <!--lista komponentow Twoje Saldo:-->
               <li><a href="{{ url_for('trade') }}">Trade</a></li>
               <li><a href="{{ url_for('items') }}">Items</a></li>
               <li><a href="{{ url_for('transactions') }}">Transactions</a></li>
@@ -29,21 +27,17 @@
     {% endif %}
 {% endwith %}
 
-    <div class="container">
-        <form class="col-md-12" method="POST" action="/trade">
-            {% for c in crypto %}
-            <div class="text-left">
-                <p>{{c}}: ${{crypto[c]['usd']}}</p>
-                <label>
-                    <input type="text" class="form-control form-control-lg" placeholder={{c}} name={{c}}>
-                </label>
-                <button type="submit" name="buy_{{c}}" value="buy_{{c}}">Buy</button>
-                <button type="submit" name="sell_{{c}}" value="sell_{{c}}">Sell</button>
-            </div>
-            {% endfor %}
-        </form>
-    </div>
-
-
+    <form class="col-md-12" method="POST" action="/sell_bitcoin">
+        <h1>Sell Bitcoin</h1>
+        <p>Price: ${{ price }}</p>
+        <p>Your balance: ${{ user.balance }}</p>
+        <p>You have: {{ amount }} BTC</p>
+        <div class="form-group">
+            <input type="number" class="form-control form-control-lg" placeholder="Amount" name="amount">
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary btn-lg btn-block">Sell</button>
+        </div>
+    </form>
 
 {% endblock %}

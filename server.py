@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from model import db
-from utils import any_empty, correct_email, more_than
-from query import create_user, is_user_exists, get_user_by_id
+from utils import any_empty, correct_email, more_than, check_buysell_buttons
+from query import create_user, is_user_exists, get_user_by_id, get_amount_of_item, make_transaction, find_item, user_transactions
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import requests
@@ -76,9 +76,6 @@ def login():
             flash('User with this email does not exists!')
             return render_template('login.html')
 
-        print(user.password)
-        print(password)
-        print(check_password_hash(user.password, password))
         if check_password_hash(user.password, password):
             login_user(user)
             flash('You have been logged in')
@@ -120,6 +117,149 @@ def trade():
             params=parameters
         )
         return render_template('trade.html', crypto=response.json())
+
+    if request.method == 'POST':
+        template_from_button = check_buysell_buttons(request.form)
+        print(template_from_button)
+        if template_from_button is not None:
+            return redirect(url_for(template_from_button))
+        return render_template('trade.html')
+
+
+@app.route('/items', methods=['POST', 'GET'])
+@login_required
+def items():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        user_items = []
+        response_json = response.json()
+
+        for item_name in ['bitcoin', 'litecoin', 'ethereum', 'dogecoin']:
+            item = find_item(current_user.id, item_name)
+            if item is not None:
+                user_items.append([item, float(response_json[item_name]['usd'])*float(item.amount)])
+
+        return render_template('items.html', all_items=user_items)
+
+
+@app.route('/transactions', methods=['POST', 'GET'])
+@login_required
+def transactions():
+    if request.method == 'GET':
+        print(user_transactions(current_user.id))
+        return render_template('transactions.html', all_transactions=user_transactions(current_user.id))
+
+
+@app.route('/buy_bitcoin', methods=['POST', 'GET'])
+@login_required
+def buy_bitcoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        return render_template('buy_bitcoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                               price=response.json()['bitcoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        parameters = {
+            'ids': 'bitcoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount <= 0.0:
+            flash('Amount is invalid!')
+            return render_template('buy_bitcoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                                   price=response.json()['bitcoin']['usd'])
+        else:
+            value = float(response.json()['bitcoin']['usd']) * amount
+
+            if float(current_user.balance) < value:
+                flash('You don\'t have enough money!')
+                return render_template('buy_bitcoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                                       price=response.json()['bitcoin']['usd'])
+            else:
+                make_transaction('buy', current_user.id, value, 'bitcoin', amount)
+                flash('You\'ve successfully purchased %s BTC for $%s' % (amount, value))
+                return render_template('buy_bitcoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                                       price=response.json()['bitcoin']['usd'])
+
+
+@app.route('/sell_bitcoin', methods=['POST', 'GET'])
+@login_required
+def sell_bitcoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        return render_template('sell_bitcoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                               price=response.json()['bitcoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        user_amount = float(get_amount_of_item(current_user.id, 'bitcoin'))
+        parameters = {
+            'ids': 'bitcoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount > user_amount or amount <= 0.0:
+            flash('Amount is invalid or you don\'t have enough BTC!')
+            return render_template('sell_bitcoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                                   price=response.json()['bitcoin']['usd'])
+        else:
+            value = float(response.json()['bitcoin']['usd']) * amount
+            make_transaction('sell', current_user.id, value, 'bitcoin', amount)
+            flash('You\'ve successfully sold %s BTC for $%s' % (amount, value))
+            return render_template('sell_bitcoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'bitcoin'),
+                                   price=response.json()['bitcoin']['usd'])
 
 
 if __name__ == '__main__':

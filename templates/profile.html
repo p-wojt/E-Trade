@@ -9,8 +9,9 @@
 
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-              <!--lista komponentow Twoje Saldo:-->
               <li><a href="{{ url_for('trade') }}">Trade</a></li>
+              <li><a href="{{ url_for('items') }}">Items</a></li>
+              <li><a href="{{ url_for('transactions') }}">Transactions</a></li>
               <li><a href="{{ url_for('profile') }}">Profile</a></li>
               <li><a href="{{ url_for('logout') }}">Log out</a></li>
           </ul>
@@ -37,7 +38,7 @@
                 <li>Surname: {{ user.surname }}</li>
                 <li>Email: {{ user.email }}</li>
                 <li>balance: ${{ user.balance }}</li>
-                <li>items balance: {{ user.items_balance }}</li>
+                <li>items balance: ${{ user.items_balance }}</li>
             </ul>
         </div>
     </div>
