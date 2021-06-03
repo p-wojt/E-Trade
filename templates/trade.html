@@ -34,11 +34,11 @@
             {% for c in crypto %}
             <div class="text-left">
                 <p>{{c}}: ${{crypto[c]['usd']}}</p>
-                <label>
-                    <input type="text" class="form-control form-control-lg" placeholder={{c}} name={{c}}>
-                </label>
                 <button type="submit" name="buy_{{c}}" value="buy_{{c}}">Buy</button>
                 <button type="submit" name="sell_{{c}}" value="sell_{{c}}">Sell</button>
+                <br>
+                <br>
+                <br>
             </div>
             {% endfor %}
         </form>

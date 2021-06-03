@@ -29,30 +29,38 @@ def get_amount_of_item(user_id, item_name):
     return item.amount
 
 
-def make_transaction(action, user_id, value, item_name, item_amount):
+def make_transaction(action, user_id, value, total_value, item_name, item_amount):
     user = get_user_by_id(user_id)
     if action == 'buy':
-        user.balance = float(user.balance) - value
-        user.items_balance = float(user.items_balance) + value
+        user.balance = float(user.balance) - total_value
+        user.items_balance = float(user.items_balance) + total_value
         item = find_item(user_id, item_name)
         if item is None:
             db.session.add(Item(user_id, item_name, item_amount))
         else:
-            item.amount = float(item_amount) + item_amount
-        db.session.add(UserTransaction(user_id, item_name, item_amount, value, 'buy'))
+            item.amount = float(item.amount) + item_amount
+        db.session.add(UserTransaction(user_id, item_name, item_amount, value, total_value, 'buy'))
         db.session.commit()
     elif action == 'sell':
-        user.balance = float(user.balance) + value
-        user.items_balance = float(user.items_balance) - value
+        user.balance = float(user.balance) + total_value
+        user.items_balance = float(user.items_balance) - total_value
         item = find_item(user_id, item_name)
         item.amount = float(item.amount) - float(item_amount)
-        if item_amount == 0.0:
-            Item.query.filter_by(user_id=user_id, item_name=item_name).delete()
-        db.session.add(UserTransaction(user_id, item_name, item_amount, value, 'sell'))
+        if item.amount == 0.0:
+            Item.query.filter_by(user_id=user_id, name=item_name).delete()
+        db.session.add(UserTransaction(user_id, item_name, item_amount, value, total_value, 'sell'))
         db.session.commit()
 
 
 def user_transactions(user_id):
-    transacion = UserTransaction.query.filter_by(user_id=user_id).all()
-    print(transacion)
-    return transacion
+    transactions = UserTransaction.query.filter_by(user_id=user_id).all()
+    return transactions
+
+
+def update_user_items_balance(curr_user, cryptocurrencies):
+    balance = 0.0
+    items = Item.query.filter_by(user_id=curr_user.id).all()
+    for c in items:
+        balance += float(c.amount) * float(cryptocurrencies[c.name]['usd'])
+    curr_user.items_balance = balance
+    db.session.commit()

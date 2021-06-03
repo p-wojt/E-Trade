@@ -39,15 +39,17 @@
                 <th>Date</th>
                 <th>Amount</th>
                 <th>Value</th>
+                <th>Total Value</th>
                 <th>Action</th>
             </tr>
             {% for t in all_transactions %}
             <tr>
                 <td>{{ t.item_name }}</td>
                 <td>{{ t.date }}</td>
-                <td>${{ t.amount }}</td>
+                <td>{{ t.amount }}</td>
                 <td>${{ t.value }}</td>
-                <td>${{ t.action }}</td>
+                <td>${{ t.total_value }}</td>
+                <td>{{ t.action }}</td>
             </tr>
             {% endfor %}
         </table>

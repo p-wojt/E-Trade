@@ -49,14 +49,16 @@ class UserTransaction(db.Model):
     date = db.Column(db.Date, nullable=False)
     amount = db.Column(db.String(100), nullable=False)
     value = db.Column(db.String(100), nullable=False)
+    total_value = db.Column(db.String(100), nullable=False)
     action = db.Column(db.String(6), nullable=False) #bought/sold
 
-    def __init__(self, user_id, item_name, amount, value, action):
+    def __init__(self, user_id, item_name, amount, value, total_value, action):
         self.user_id = user_id
         self.item_name = item_name
         self.date = date.today()
         self.amount = amount
         self.value = value
+        self.total_value = total_value
         self.action = action
 
 

@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, flash, redirect, url_for
 from flask_login import LoginManager, login_user, current_user, logout_user, login_required
 from model import db
 from utils import any_empty, correct_email, more_than, check_buysell_buttons
-from query import create_user, is_user_exists, get_user_by_id, get_amount_of_item, make_transaction, find_item, user_transactions
+from query import create_user, is_user_exists, get_user_by_id, get_amount_of_item, make_transaction, find_item, user_transactions, update_user_items_balance
 from werkzeug.security import generate_password_hash, check_password_hash
 import json
 import requests
@@ -24,6 +24,9 @@ def index():
 @app.route('/register', methods=['POST', 'GET'])
 def register():
     if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+
         return render_template('register.html')
     elif request.method == 'POST':
         email = request.form.get('email')
@@ -56,6 +59,9 @@ def register():
 @app.route('/login', methods=['POST', 'GET'])
 def login():
     if request.method == 'GET':
+        if current_user.is_authenticated:
+            return redirect(url_for('index'))
+
         return render_template('login.html')
     elif request.method == 'POST':
         email = request.form.get('email')
@@ -100,6 +106,16 @@ def logout():
 @login_required
 def profile():
     if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        update_user_items_balance(current_user, response.json())
         return render_template('profile.html', user=current_user)
 
 
@@ -120,7 +136,6 @@ def trade():
 
     if request.method == 'POST':
         template_from_button = check_buysell_buttons(request.form)
-        print(template_from_button)
         if template_from_button is not None:
             return redirect(url_for(template_from_button))
         return render_template('trade.html')
@@ -146,7 +161,12 @@ def items():
         for item_name in ['bitcoin', 'litecoin', 'ethereum', 'dogecoin']:
             item = find_item(current_user.id, item_name)
             if item is not None:
-                user_items.append([item, float(response_json[item_name]['usd'])*float(item.amount)])
+                user_items.append(
+                    [item,
+                     float(response_json[item_name]['usd']),
+                     float(response_json[item_name]['usd'])*float(item.amount)
+                     ]
+                )
 
         return render_template('items.html', all_items=user_items)
 
@@ -155,7 +175,6 @@ def items():
 @login_required
 def transactions():
     if request.method == 'GET':
-        print(user_transactions(current_user.id))
         return render_template('transactions.html', all_transactions=user_transactions(current_user.id))
 
 
@@ -164,7 +183,7 @@ def transactions():
 def buy_bitcoin():
     if request.method == 'GET':
         parameters = {
-            'ids': 'bitcoin',
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
             'vs_currencies': 'usd'
         }
 
@@ -172,6 +191,8 @@ def buy_bitcoin():
             'https://api.coingecko.com/api/v3/simple/price',
             params=parameters
         )
+
+        update_user_items_balance(current_user, response.json())
 
         return render_template('buy_bitcoin.html',
                                user=current_user,
@@ -182,7 +203,7 @@ def buy_bitcoin():
     if request.method == 'POST':
         amount = float(request.form.get('amount'))
         parameters = {
-            'ids': 'bitcoin',
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
             'vs_currencies': 'usd'
         }
 
@@ -197,7 +218,8 @@ def buy_bitcoin():
                                    amount=get_amount_of_item(current_user.id, 'bitcoin'),
                                    price=response.json()['bitcoin']['usd'])
         else:
-            value = float(response.json()['bitcoin']['usd']) * amount
+            value = float(response.json()['bitcoin']['usd'])
+            total_value = float(response.json()['bitcoin']['usd']) * amount
 
             if float(current_user.balance) < value:
                 flash('You don\'t have enough money!')
@@ -206,8 +228,9 @@ def buy_bitcoin():
                                        amount=get_amount_of_item(current_user.id, 'bitcoin'),
                                        price=response.json()['bitcoin']['usd'])
             else:
-                make_transaction('buy', current_user.id, value, 'bitcoin', amount)
-                flash('You\'ve successfully purchased %s BTC for $%s' % (amount, value))
+                update_user_items_balance(current_user, response.json())
+                make_transaction('buy', current_user.id, value, total_value, 'bitcoin', amount)
+                flash('You\'ve successfully purchased %s BTC for $%s' % (amount, total_value))
                 return render_template('buy_bitcoin.html',
                                        user=current_user,
                                        amount=get_amount_of_item(current_user.id, 'bitcoin'),
@@ -219,7 +242,7 @@ def buy_bitcoin():
 def sell_bitcoin():
     if request.method == 'GET':
         parameters = {
-            'ids': 'bitcoin',
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
             'vs_currencies': 'usd'
         }
 
@@ -227,6 +250,8 @@ def sell_bitcoin():
             'https://api.coingecko.com/api/v3/simple/price',
             params=parameters
         )
+
+        update_user_items_balance(current_user, response.json())
 
         return render_template('sell_bitcoin.html',
                                user=current_user,
@@ -238,7 +263,7 @@ def sell_bitcoin():
         amount = float(request.form.get('amount'))
         user_amount = float(get_amount_of_item(current_user.id, 'bitcoin'))
         parameters = {
-            'ids': 'bitcoin',
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
             'vs_currencies': 'usd'
         }
 
@@ -253,13 +278,349 @@ def sell_bitcoin():
                                    amount=get_amount_of_item(current_user.id, 'bitcoin'),
                                    price=response.json()['bitcoin']['usd'])
         else:
-            value = float(response.json()['bitcoin']['usd']) * amount
-            make_transaction('sell', current_user.id, value, 'bitcoin', amount)
-            flash('You\'ve successfully sold %s BTC for $%s' % (amount, value))
+            value = float(response.json()['bitcoin']['usd'])
+            total_value = float(response.json()['bitcoin']['usd']) * amount
+            update_user_items_balance(current_user, response.json())
+            make_transaction('sell', current_user.id, value, total_value, 'bitcoin', amount)
+            flash('You\'ve successfully sold %s BTC for $%s' % (amount, total_value))
             return render_template('sell_bitcoin.html',
                                    user=current_user,
                                    amount=get_amount_of_item(current_user.id, 'bitcoin'),
                                    price=response.json()['bitcoin']['usd'])
+
+
+@app.route('/buy_dogecoin', methods=['POST', 'GET'])
+@login_required
+def buy_dogecoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        print(response.json()['dogecoin']['usd'])
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('buy_dogecoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                               price=response.json()['dogecoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount <= 0.0:
+            flash('Amount is invalid!')
+            return render_template('buy_dogecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                                   price=response.json()['dogecoin']['usd'])
+        else:
+            value = float(response.json()['dogecoin']['usd'])
+            total_value = float(response.json()['dogecoin']['usd']) * amount
+
+            if float(current_user.balance) < value:
+                flash('You don\'t have enough money!')
+                return render_template('buy_dogecoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                                       price=response.json()['dogecoin']['usd'])
+            else:
+                update_user_items_balance(current_user, response.json())
+                make_transaction('buy', current_user.id, value, total_value, 'dogecoin', amount)
+                flash('You\'ve successfully purchased %s DOGE for $%s' % (amount, total_value))
+                return render_template('buy_dogecoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                                       price=response.json()['dogecoin']['usd'])
+
+
+@app.route('/sell_dogecoin', methods=['POST', 'GET'])
+@login_required
+def sell_dogecoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('sell_dogecoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                               price=response.json()['dogecoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        user_amount = float(get_amount_of_item(current_user.id, 'dogecoin'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount > user_amount or amount <= 0.0:
+            flash('Amount is invalid or you don\'t have enough DOGE!')
+            return render_template('sell_dogecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                                   price=response.json()['dogecoin']['usd'])
+        else:
+            value = float(response.json()['dogecoin']['usd'])
+            total_value = float(response.json()['dogecoin']['usd']) * amount
+            update_user_items_balance(current_user, response.json())
+            make_transaction('sell', current_user.id, value, total_value, 'dogecoin', amount)
+            flash('You\'ve successfully sold %s DOGE for $%s' % (amount, total_value))
+            return render_template('sell_dogecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'dogecoin'),
+                                   price=response.json()['dogecoin']['usd'])
+
+
+@app.route('/buy_ethereum', methods=['POST', 'GET'])
+@login_required
+def buy_ethereum():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('buy_ethereum.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'ethereum'),
+                               price=response.json()['ethereum']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount <= 0.0:
+            flash('Amount is invalid!')
+            return render_template('buy_ethereum.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'ethereum'),
+                                   price=response.json()['ethereum']['usd'])
+        else:
+            value = float(response.json()['ethereum']['usd'])
+            total_value = float(response.json()['ethereum']['usd']) * amount
+
+            if float(current_user.balance) < value:
+                flash('You don\'t have enough money!')
+                return render_template('buy_ethereum.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'ethereum'),
+                                       price=response.json()['ethereum']['usd'])
+            else:
+                update_user_items_balance(current_user, response.json())
+                make_transaction('buy', current_user.id, value, total_value, 'ethereum', amount)
+                flash('You\'ve successfully purchased %s ETH for $%s' % (amount, total_value))
+                return render_template('buy_ethereum.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'ethereum'),
+                                       price=response.json()['ethereum']['usd'])
+
+
+@app.route('/sell_ethereum', methods=['POST', 'GET'])
+@login_required
+def sell_ethereum():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('sell_ethereum.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'ethereum'),
+                               price=response.json()['ethereum']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        user_amount = float(get_amount_of_item(current_user.id, 'ethereum'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount > user_amount or amount <= 0.0:
+            flash('Amount is invalid or you don\'t have enough ETH!')
+            return render_template('sell_ethereum.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'ethereum'),
+                                   price=response.json()['ethereum']['usd'])
+        else:
+            value = float(response.json()['ethereum']['usd'])
+            total_value = float(response.json()['ethereum']['usd']) * amount
+            update_user_items_balance(current_user, response.json())
+            make_transaction('sell', current_user.id, value, total_value, 'ethereum', amount)
+            flash('You\'ve successfully sold %s ETH for $%s' % (amount, total_value))
+            return render_template('sell_ethereum.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'ethereum'),
+                                   price=response.json()['ethereum']['usd'])
+
+
+@app.route('/buy_litecoin', methods=['POST', 'GET'])
+@login_required
+def buy_litecoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('buy_litecoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'litecoin'),
+                               price=response.json()['litecoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount <= 0.0:
+            flash('Amount is invalid!')
+            return render_template('buy_litecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'litecoin'),
+                                   price=response.json()['litecoin']['usd'])
+        else:
+            value = float(response.json()['litecoin']['usd'])
+            total_value = float(response.json()['litecoin']['usd']) * amount
+
+            if float(current_user.balance) < value:
+                flash('You don\'t have enough money!')
+                return render_template('buy_litecoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'litecoin'),
+                                       price=response.json()['litecoin']['usd'])
+            else:
+                update_user_items_balance(current_user, response.json())
+                make_transaction('buy', current_user.id, value, total_value, 'litecoin', amount)
+                flash('You\'ve successfully purchased %s LTC for $%s' % (amount, total_value))
+                return render_template('buy_litecoin.html',
+                                       user=current_user,
+                                       amount=get_amount_of_item(current_user.id, 'litecoin'),
+                                       price=response.json()['litecoin']['usd'])
+
+
+@app.route('/sell_litecoin', methods=['POST', 'GET'])
+@login_required
+def sell_litecoin():
+    if request.method == 'GET':
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+
+        update_user_items_balance(current_user, response.json())
+
+        return render_template('sell_litecoin.html',
+                               user=current_user,
+                               amount=get_amount_of_item(current_user.id, 'litecoin'),
+                               price=response.json()['litecoin']['usd']
+                               )
+
+    if request.method == 'POST':
+        amount = float(request.form.get('amount'))
+        user_amount = float(get_amount_of_item(current_user.id, 'litecoin'))
+        parameters = {
+            'ids': 'bitcoin,litecoin,ethereum,dogecoin',
+            'vs_currencies': 'usd'
+        }
+
+        response = requests.get(
+            'https://api.coingecko.com/api/v3/simple/price',
+            params=parameters
+        )
+        if amount > user_amount or amount <= 0.0:
+            flash('Amount is invalid or you don\'t have enough LTC!')
+            return render_template('sell_litecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'litecoin'),
+                                   price=response.json()['litecoin']['usd'])
+        else:
+            value = float(response.json()['litecoin']['usd'])
+            total_value = float(response.json()['litecoin']['usd']) * amount
+            update_user_items_balance(current_user, response.json())
+            make_transaction('sell', current_user.id, value, total_value, 'litecoin', amount)
+            flash('You\'ve successfully sold %s LTC for $%s' % (amount, total_value))
+            return render_template('sell_litecoin.html',
+                                   user=current_user,
+                                   amount=get_amount_of_item(current_user.id, 'litecoin'),
+                                   price=response.json()['litecoin']['usd'])
 
 
 if __name__ == '__main__':
