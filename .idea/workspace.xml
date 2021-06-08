@@ -2,21 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="f38fdf41-8284-460d-a661-289170e01a64" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/1f4f09cb-1b60-4710-a162-98e0d3989f03.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources/1f4f09cb-1b60-4710-a162-98e0d3989f03.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/model.py" beforeDir="false" afterPath="$PROJECT_DIR$/model.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_bitcoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_bitcoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_dogecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_dogecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_ethereum.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_ethereum.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_litecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_litecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_bitcoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_bitcoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_dogecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_dogecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_ethereum.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_ethereum.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_litecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_litecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/transactions.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/transactions.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -167,7 +153,8 @@
       <workItem from="1622706272691" duration="127000" />
       <workItem from="1622809127413" duration="627000" />
       <workItem from="1623089206447" duration="65000" />
-      <workItem from="1623153673058" duration="4273000" />
+      <workItem from="1623153673058" duration="4454000" />
+      <workItem from="1623159904857" duration="1645000" />
     </task>
     <task id="LOCAL-00001" summary="Log in/out system, database model, some pages">
       <created>1622283504568</created>
@@ -205,6 +192,6 @@
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
     <SUITE FILE_PATH="coverage/e_trade$utils.coverage" NAME="utils Coverage Results" MODIFIED="1622295538572" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
     <SUITE FILE_PATH="coverage/e_trade$query.coverage" NAME="query Coverage Results" MODIFIED="1622647522936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
-    <SUITE FILE_PATH="coverage/e_trade$server.coverage" NAME="server Coverage Results" MODIFIED="1623159421067" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/e_trade$server.coverage" NAME="server Coverage Results" MODIFIED="1623159505936" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
