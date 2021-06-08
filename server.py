@@ -52,7 +52,7 @@ def register():
             return render_template('register.html')
 
         create_user(name, surname, email, password)
-        flash('You account has been created successfully!')
+        flash('Your account has been created successfully!')
         return redirect(url_for('login'))
 
 
@@ -303,7 +303,6 @@ def buy_dogecoin():
             params=parameters
         )
 
-        print(response.json()['dogecoin']['usd'])
         update_user_items_balance(current_user, response.json())
 
         return render_template('buy_dogecoin.html',
