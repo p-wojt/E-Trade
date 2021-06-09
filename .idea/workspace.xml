@@ -3,24 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="f38fdf41-8284-460d-a661-289170e01a64" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/server.py" beforeDir="false" afterPath="$PROJECT_DIR$/server.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/base.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/base.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_bitcoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_bitcoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_dogecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_dogecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_ethereum.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_ethereum.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/buy_litecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/buy_litecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/items.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/items.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/login.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/profile.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/register.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/register.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_bitcoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_bitcoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_dogecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_dogecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_ethereum.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_ethereum.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/sell_litecoin.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/sell_litecoin.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/trade.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/trade.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/templates/transactions.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/transactions.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -178,7 +160,7 @@
       <workItem from="1623166274188" duration="106000" />
       <workItem from="1623237909442" duration="3429000" />
       <workItem from="1623257634998" duration="1955000" />
-      <workItem from="1623266500471" duration="4800000" />
+      <workItem from="1623266500471" duration="4897000" />
     </task>
     <task id="LOCAL-00001" summary="Log in/out system, database model, some pages">
       <created>1622283504568</created>
