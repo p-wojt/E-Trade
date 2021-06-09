@@ -4,7 +4,7 @@
   <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand"><b>E-Trade</b></a>
+            <a class="navbar-brand" href="/"><b>E-Trade</b></a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -32,14 +32,28 @@
 
 
     <div class="container">
-        <div class="text-left">
-            <ul>
-                <li>Name: {{ user.name }}</li>
-                <li>Surname: {{ user.surname }}</li>
-                <li>Email: {{ user.email }}</li>
-                <li>balance: ${{ user.balance }}</li>
-                <li>items balance: ${{ user.items_balance }}</li>
-            </ul>
+        <div class="panel-group">
+            <h1>Profile</h1>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Name</b></div>
+                <div class="panel-body">{{ user.name }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Surname</b></div>
+                <div class="panel-body">{{ user.surname }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Email</b></div>
+                <div class="panel-body">{{ user.email }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Balance</b></div>
+                <div class="panel-body">${{ user.balance }}</div>
+            </div>
+            <div class="panel panel-default">
+                <div class="panel-heading"><b>Items balance</b></div>
+                <div class="panel-body">${{ user.items_balance }}</div>
+            </div>
         </div>
     </div>
 

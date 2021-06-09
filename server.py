@@ -3,8 +3,7 @@ from flask_login import LoginManager, login_user, current_user, logout_user, log
 from model import db
 from utils import any_empty, correct_email, more_than, check_buysell_buttons
 from query import create_user, is_user_exists, get_user_by_id, get_amount_of_item, make_transaction, find_item, user_transactions, update_user_items_balance
-from werkzeug.security import generate_password_hash, check_password_hash
-import json
+from werkzeug.security import check_password_hash
 import requests
 
 app = Flask(__name__)

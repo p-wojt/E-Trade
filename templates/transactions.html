@@ -4,7 +4,7 @@
   <nav class="navbar navbar-default">
       <div class="container">
         <div class="navbar-header">
-            <a class="navbar-brand"><b>E-Trade</b></a>
+            <a class="navbar-brand" href="/"><b>E-Trade</b></a>
         </div>
 
         <div class="collapse navbar-collapse">
@@ -33,27 +33,43 @@
 
 
     <div class="container">
-        <table style="width: 100%">
-            <tr>
-                <th>Item Name</th>
-                <th>Date</th>
-                <th>Time</th>
-                <th>Amount</th>
-                <th>Value</th>
-                <th>Total Value</th>
-                <th>Action</th>
-            </tr>
+        <table class="table" style="width: 100%">
+             <thead>
+                <tr>
+                    <th>Item Name</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Amount</th>
+                    <th>Value</th>
+                    <th>Total Value</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
             {% for t in all_transactions %}
-            <tr>
-                <td>{{ t.item_name }}</td>
-                <td>{{ t.date }}</td>
-                <td>{{ t.time }}</td>
-                <td>{{ t.amount }}</td>
-                <td>${{ t.value }}</td>
-                <td>${{ t.total_value }}</td>
-                <td>{{ t.action }}</td>
-            </tr>
+                {% if t.action == 'buy' %}
+                    <tr class="bg-warning">
+                        <td>{{ t.item_name }}</td>
+                        <td>{{ t.date }}</td>
+                        <td>{{ t.time }}</td>
+                        <td>{{ t.amount }}</td>
+                        <td>${{ t.value }}</td>
+                        <td>${{ t.total_value }}</td>
+                        <td>{{ t.action }}</td>
+                    </tr>
+                {% else %}
+                    <tr class="bg-success">
+                        <td>{{ t.item_name }}</td>
+                        <td>{{ t.date }}</td>
+                        <td>{{ t.time }}</td>
+                        <td>{{ t.amount }}</td>
+                        <td>${{ t.value }}</td>
+                        <td>${{ t.total_value }}</td>
+                        <td>{{ t.action }}</td>
+                    </tr>
+                {% endif %}
             {% endfor %}
+            </tbody>
         </table>
     </div>
 
