@@ -9,7 +9,6 @@
 
         <div class="collapse navbar-collapse">
           <ul class="nav navbar-nav navbar-right">
-              <!--lista komponentow Twoje Saldo:-->
               <li><a href="{{ url_for('trade') }}">Trade</a></li>
               <li><a href="{{ url_for('items') }}">Items</a></li>
               <li><a href="{{ url_for('transactions') }}">Transactions</a></li>
@@ -21,15 +20,18 @@
       </div>
   </nav>
 
-<div class="container">
+<table class="table" style="width: 100%">
  {% with messages = get_flashed_messages() %}
     {% if messages %}
-        {% for msg in messages %}
-            <p>{{msg}}</p>
-        {% endfor %}
+        <tbody>
+        <tr class="bg-warning center">
+            <td style="text-align: center">{{messages[0]}}</td>
+        </tr>
+        </tbody>
     {% endif %}
 {% endwith %}
-</div>
+</table>
+
 
 
     <div class="container">

@@ -83,7 +83,7 @@ def login():
 
         if check_password_hash(user.password, password):
             login_user(user)
-            flash('You have been logged in')
+            flash('You have been logged in!')
             return redirect(url_for('profile'))
         else:
             flash('Password is not correct!')
@@ -95,9 +95,9 @@ def login():
 def logout():
     if current_user.is_authenticated:
         logout_user()
-        flash('You have been logged out')
+        flash('You have been logged out!')
     else:
-        flash('You have to be logged in to log out')
+        flash('You have to be logged in to log out!')
     return redirect(url_for('index'))
 
 
