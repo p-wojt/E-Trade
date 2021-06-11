@@ -1,2 +1,3 @@
-# e-trade
-Internet exchange simulation
+# E-Trade
+Imitation of cryptocurrency exchange website.
+
