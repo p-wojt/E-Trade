@@ -10,7 +10,7 @@ The application aims to teach you how to invest in crypto properly by making you
 
 # How to run?
  1. Clone repository to your local folder by using command: `git clone https://github.com/p-wojt/e-trade.git`.
- 2. Create virtual environment and activate to install all libraries which are in requirements.txt.
+ 2. Create virtual environment and activate to install all libraries which are in `requirements.txt`.
  3. Run `server.py` to start an application.
 
 Have fun!
