@@ -12,6 +12,6 @@ The application aims to teach you how to invest in crypto properly by making you
  1. Clone repository to your local folder by using command: `git clone https://github.com/p-wojt/e-trade.git`.
  2. Create virtual environment and activate to install all libraries which are in `requirements.txt`.
  3. Use command `py server.py` to start an application.
- 4. Open your browser and put adress `127.0.0.1:5000`
+ 4. Open your browser and enter the local adress `127.0.0.1:5000`
 
 Have fun!
